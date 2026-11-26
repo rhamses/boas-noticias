@@ -4,41 +4,62 @@ export const prerender = false;
 import { getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { formatPubDate, pubDateTimeAttr } from '../../lib/dates';
+import { externalHref } from '../../lib/links';
 
 const { slug } = Astro.params;
 const entry = slug ? await getEntry('noticias', slug) : undefined;
 
 if (!entry) {
   Astro.response.status = 404;
+  Astro.response.statusText = 'Not Found';
 }
 
 const rendered = entry ? await render(entry) : undefined;
 const Content = rendered?.Content;
+const sourceHref = entry ? externalHref(entry.data.sourceUrl) : undefined;
 ---
 
 {
   entry && Content ? (
     <Base title={`${entry.data.title} · Boas Notícias`} description={entry.data.description}>
       <article>
-        <h1>{entry.data.title}</h1>
-        <p>
-          <time datetime={pubDateTimeAttr(entry.data.pubDate)}>{formatPubDate(entry.data.pubDate)}</time>
-        </p>
-        <p>
-          Fonte: <a href={entry.data.sourceUrl}>{entry.data.source}</a>
-        </p>
-        <Content />
+        <header class="article-header">
+          <h1>{entry.data.title}</h1>
+          <p class="dek">{entry.data.description}</p>
+          <div class="byline">
+            <time class="when" datetime={pubDateTimeAttr(entry.data.pubDate)}>
+              {formatPubDate(entry.data.pubDate)}
+            </time>
+            <p class="source">
+              Fonte:{' '}
+              {sourceHref ? (
+                <a href={sourceHref} rel="noreferrer">
+                  {entry.data.source}
+                  <span class="sr-only"> (site externo)</span>
+                </a>
+              ) : (
+                entry.data.source
+              )}
+            </p>
+          </div>
+        </header>
+        <div class="prose">
+          <Content />
+        </div>
       </article>
-      <p>
-        <a href="/">Voltar ao início</a>
+      <p class="return">
+        <a class="back" href="/">Voltar ao início</a>
       </p>
     </Base>
   ) : (
-    <Base title="Notícia não encontrada · Boas Notícias">
-      <h1>Notícia não encontrada</h1>
-      <p>
-        <a href="/">Voltar ao início</a>
-      </p>
+    <Base title="Notícia não encontrada · Boas Notícias" description="Não há uma notícia publicada neste endereço.">
+      <div class="notice">
+        <h1>Notícia não encontrada</h1>
+        <p>Não há uma notícia publicada neste endereço.</p>
+        <p>
+          <a class="back" href="/">Voltar ao início</a>
+        </p>
+      </div>
     </Base>
   )
 }

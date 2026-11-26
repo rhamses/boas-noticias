@@ -1,42 +1,56 @@
 ---
+import '../styles/site.css';
+
 interface Props {
   title: string;
   description?: string;
+  home?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, home = false } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3eee6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171512" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
   </head>
-  <body>
-    <header>
-      <nav>
-        <a href="/">Boas Notícias</a>
-      </nav>
-    </header>
-    <main>
-      <slot />
-    </main>
+  <body class:list={{ 'is-home': home }}>
+    <div class="sheet">
+      <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+      <header class="masthead">
+        <nav aria-label="Principal">
+          {
+            home ? (
+              <h1 class="brand">
+                <a href="/" aria-current="page">
+                  Boas Notícias
+                </a>
+              </h1>
+            ) : (
+              <p class="brand">
+                <a href="/">Boas Notícias</a>
+              </p>
+            )
+          }
+        </nav>
+        <p class="tagline">
+          Notícias verificáveis sobre gentileza, ciência, cultura, comunidade e meio ambiente.
+        </p>
+        <div class="masthead-rule" aria-hidden="true"></div>
+      </header>
+      <main id="conteudo" tabindex="-1">
+        <slot />
+      </main>
+      <footer class="colophon">
+        <p>Um jornal pequeno, só de boas notícias.</p>
+      </footer>
+    </div>
   </body>
 </html>
-
-<style>
-  body {
-    font-family: system-ui, sans-serif;
-    line-height: 1.5;
-    max-width: 40rem;
-    margin: 1rem auto;
-    padding: 0 1rem;
-  }
-
-  a {
-    color: inherit;
-  }
-</style>
