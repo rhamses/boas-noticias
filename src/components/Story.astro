@@ -1,0 +1,24 @@
+---
+import { formatPubDate, pubDateTimeAttr } from '../lib/dates';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  href: string;
+  lead?: boolean;
+  level?: 2 | 3;
+}
+
+const { title, description, pubDate, href, lead = false, level = 2 } = Astro.props;
+const Heading = level === 3 ? 'h3' : 'h2';
+---
+
+<article class:list={['story', { lead }]}>
+  {lead && <p class="kicker">Mais recente</p>}
+  <Heading>
+    <a class="story-link" href={href}>{title}</a>
+  </Heading>
+  <time class="when" datetime={pubDateTimeAttr(pubDate)}>{formatPubDate(pubDate)}</time>
+  <p class="dek">{description}</p>
+</article>

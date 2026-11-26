@@ -2,43 +2,56 @@
 export const prerender = false;
 
 import { getCollection } from 'astro:content';
+import Story from '../components/Story.astro';
 import Base from '../layouts/Base.astro';
-import { formatPubDate, pubDateTimeAttr } from '../lib/dates';
 
 const noticias = (await getCollection('noticias')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+const [destaque, ...anteriores] = noticias;
 ---
 
 <Base
   title="Boas Notícias"
   description="Notícias verificáveis sobre gentileza, ciência, cultura, comunidade e meio ambiente."
+  home
 >
-  <h1>Boas Notícias</h1>
-  <p>
-    Notícias verificáveis sobre gentileza, ciência, cultura, comunidade e meio ambiente.
-  </p>
   {
-    noticias.length === 0 ? (
-      <p>Nenhuma notícia por enquanto.</p>
+    destaque ? (
+      <Story
+        lead
+        title={destaque.data.title}
+        description={destaque.data.description}
+        pubDate={destaque.data.pubDate}
+        href={`/noticias/${destaque.id}`}
+      />
     ) : (
-      <ol>
-        {noticias.map((noticia) => (
-          <li>
-            <article>
-              <h2>
-                <a href={`/noticias/${noticia.id}`}>{noticia.data.title}</a>
-              </h2>
-              <p>
-                <time datetime={pubDateTimeAttr(noticia.data.pubDate)}>
-                  {formatPubDate(noticia.data.pubDate)}
-                </time>
-              </p>
-              <p>{noticia.data.description}</p>
-            </article>
-          </li>
-        ))}
-      </ol>
+      <div class="notice">
+        <h2>Nenhuma notícia por enquanto</h2>
+        <p>As próximas notícias aparecem aqui, da mais nova para a mais antiga.</p>
+      </div>
+    )
+  }
+  {
+    anteriores.length > 0 && (
+      <section class="archive">
+        <h2 class="kicker" id="anteriores">
+          Anteriores
+        </h2>
+        <ol class="story-list" aria-labelledby="anteriores">
+          {anteriores.map((noticia) => (
+            <li>
+              <Story
+                level={3}
+                title={noticia.data.title}
+                description={noticia.data.description}
+                pubDate={noticia.data.pubDate}
+                href={`/noticias/${noticia.id}`}
+              />
+            </li>
+          ))}
+        </ol>
+      </section>
     )
   }
 </Base>

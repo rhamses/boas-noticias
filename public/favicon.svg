@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .paper { fill: #f3eee6; }
+    .ink { fill: #1c1916; }
+    .moss { fill: #1b5e45; }
+    @media (prefers-color-scheme: dark) {
+      .paper { fill: #171512; }
+      .ink { fill: #f4efe6; }
+      .moss { fill: #8fd0b2; }
+    }
+  </style>
+  <rect class="paper" width="32" height="32" />
+  <rect class="ink" x="5" y="7" width="22" height="3" />
+  <rect class="ink" x="5" y="12" width="22" height="1.25" />
+  <rect class="moss" x="5" y="16" width="14" height="1.25" />
+  <rect class="ink" x="5" y="19.5" width="22" height="1.25" />
+  <rect class="ink" x="5" y="23" width="18" height="1.25" />
+</svg>
