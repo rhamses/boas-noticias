@@ -1,0 +1,23 @@
+{
+  "name": "boas-noticias",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Site de boas notícias em Astro SSR. O conteúdo vive em arquivos Markdown.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@astrojs/node": "^11.1.14",
+    "astro": "^7.4.13"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
