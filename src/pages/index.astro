@@ -1,0 +1,44 @@
+---
+export const prerender = false;
+
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { formatPubDate, pubDateTimeAttr } from '../lib/dates';
+
+const noticias = (await getCollection('noticias')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<Base
+  title="Boas Notícias"
+  description="Notícias verificáveis sobre gentileza, ciência, cultura, comunidade e meio ambiente."
+>
+  <h1>Boas Notícias</h1>
+  <p>
+    Notícias verificáveis sobre gentileza, ciência, cultura, comunidade e meio ambiente.
+  </p>
+  {
+    noticias.length === 0 ? (
+      <p>Nenhuma notícia por enquanto.</p>
+    ) : (
+      <ol>
+        {noticias.map((noticia) => (
+          <li>
+            <article>
+              <h2>
+                <a href={`/noticias/${noticia.id}`}>{noticia.data.title}</a>
+              </h2>
+              <p>
+                <time datetime={pubDateTimeAttr(noticia.data.pubDate)}>
+                  {formatPubDate(noticia.data.pubDate)}
+                </time>
+              </p>
+              <p>{noticia.data.description}</p>
+            </article>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+</Base>
